@@ -101,6 +101,7 @@ const SolanaSwapUI: React.FC = () => {
   const { isConnected, address } = useAccount();
   const params = useParams();
   const destAddress = params.address;
+  console.log("destAddress", destAddress);
 
   const handleFromAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -263,12 +264,14 @@ useEffect(() => {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log("destAddress", destAddress);
       setIsLoading(true);
       try {
         const response = await axios.get(
           `/api/1inch-proxy?address=${destAddress}`
         );
         setApiResponse(response.data);
+
         console.log("API Response:", response.data);
       } catch (error) {
         console.error("API Error:", error);
@@ -277,11 +280,11 @@ useEffect(() => {
         setIsLoading(false);
       }
     };
-
-    if (showAdditionalUI) {
-      fetchData();
-    }
-  }, [showAdditionalUI]);
+    fetchData();
+    // if (showAdditionalUI) {
+    //   fetchData();
+    // }
+  }, []);
 
   const ResData = apiResponse;
   console.log("====================================");
@@ -301,11 +304,11 @@ useEffect(() => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-200 via-pink-100 to-yellow-100 text-gray-800 flex items-center justify-center p-4 font-mono relative overflow-hidden">
       {/* Animated background patterns */}
-      <div className="absolute inset-0 bg-white">
+      {/* <div className="absolute inset-0 bg-white">
         <div className="absolute top-0 left-0 w-64 h-64 bg-cyan-300/20 rounded-full -translate-x-1/2 -translate-y-1/2 blur-2xl animate-pulse" />
         <div className="absolute top-1/4 right-0 w-72 h-72 bg-pink-300/20 rounded-full translate-x-1/2 blur-2xl animate-pulse delay-75" />
         <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-yellow-300/20 rounded-full translate-y-1/2 blur-2xl animate-pulse delay-150" />
-      </div>
+      </div> */}
 
       <div className="relative w-full max-w-md">
         {/* Card glow effect */}
@@ -316,11 +319,11 @@ useEffect(() => {
           <div className="flex justify-end mb-2">
             <ConnectButton />
           </div>
-          {!showAdditionalUI && (
+          {/* {!showAdditionalUI && (
             <div className="">
               <p>Buy DOGE tokens with BNB in one-click</p>
             </div>
-          )}
+          )} */}
           {!showAdditionalUI && (
             <div className="">
               {/* Main card */}
@@ -341,7 +344,7 @@ useEffect(() => {
                   <div className="flex items-center space-x-4 mb-4">
                     <img
                       src={
-                        apiResponse?.LogoURI ||
+                        apiResponse?.LogoURI !== null && apiResponse?.LogoURI !== undefined ? apiResponse?.LogoURI :
                         "https://res.cloudinary.com/dvddnptpi/image/upload/v1739379832/frfgvnra42g6x7ovmana.webp"
                       }
                       alt="Token Logo"
@@ -400,88 +403,109 @@ useEffect(() => {
           )}
           {showAdditionalUI && (
             <>
-              {/* Error Message */}
               {errorMessage && (
-                <div className="flex items-center text-sm justify-center gap-2 p-4 mt-2 text-red-600 bg-red-50 rounded-xl border border-red-200">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-5 h-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                      clipRule="evenodd"
-                    />
+                <div className="flex items-center text-sm justify-center gap-2 p-3 mb-4 text-red-600 bg-red-50/60 backdrop-blur-sm rounded-lg border-l-4 border-red-500 animate-slideIn">
+                  <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                   </svg>
                   {errorMessage}
                 </div>
               )}
-              {showAdditionalUI && (
-                <div className="p-2 px-4 rounded-xl bg-gradient-to-r from-cyan-50 via-pink-50 to-yellow-50 shadow-lg border border-white/50">
-                  <div className="flex flex-col items-start justify-between space-y-2">
-                    {" "}
-                    {/* Changed to flex-col */}
-                    <div className=" flex items-center space-x-4">
-                      <div className="relative">
-                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-pink-300 to-yellow-300 rounded-full blur-sm animate-pulse" />
-                        <img
-                          src="https://res.cloudinary.com/dvddnptpi/image/upload/v1739379832/frfgvnra42g6x7ovmana.webp"
-                          alt="Token Logo"
-                          className="relative w-10 h-10 rounded-full border-2 border-white shadow-lg"
-                        />
-                      </div>
-                      <div>
-                        <p className="text-gray-800 font-bold">BNB </p>
-                        <p className="text-gray-500 text-sm">BNB </p>
-                      </div>
+
+              <div className="space-y-3">
+                {/* Input Card */}
+                <div className="bg-white/40 backdrop-blur-md rounded-2xl p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <img
+                        src="https://res.cloudinary.com/dvddnptpi/image/upload/v1739379832/frfgvnra42g6x7ovmana.webp"
+                        alt="BNB"
+                        className="w-8 h-8 rounded-full ring-2 ring-yellow-400/50"
+                      />
+                      <span className="font-medium text-gray-700">BNB</span>
                     </div>
+                    <div className="text-sm text-gray-500">Balance: 0.00</div>
+                  </div>
+                  
+                  <div className="relative">
                     <input
                       type="number"
-                      placeholder="Enter BNB amount"
+                      placeholder="0.0"
                       value={bnbAmount}
                       onChange={handleBnbAmountChange}
-                      className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-200"
+                      className="w-full text-3xl font-light bg-transparent border-none focus:outline-none focus:ring-0 p-0 text-gray-700 placeholder-gray-300"
                     />
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                      <button className="text-sm text-blue-500 hover:text-blue-600">MAX</button>
+                      <span className="text-sm text-gray-400">BNB</span>
+                    </div>
                   </div>
                 </div>
-              )}
-              {apiResponse && (
-                <div className="flex items-center justify-between p-4 bg-white rounded-xl shadow-lg border border-white">
-                  <div className="flex items-center space-x-4">
+
+                {/* Arrow */}
+                <div className="flex justify-center">
+                  <div className="w-8 h-8 flex items-center justify-center bg-white/60 rounded-full shadow-sm">
+                    <ArrowRight className="w-4 h-4 text-gray-400" />
+                  </div>
+                </div>
+
+                {/* Output Card */}
+                {apiResponse && (
+                  <div className="bg-white/40 backdrop-blur-md rounded-2xl p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={apiResponse?.LogoURI || "https://res.cloudinary.com/dvddnptpi/image/upload/v1739379832/frfgvnra42g6x7ovmana.webp"}
+                          alt={apiResponse.symbol}
+                          className="w-8 h-8 rounded-full ring-2 ring-purple-400/50"
+                        />
+                        <span className="font-medium text-gray-700">{apiResponse.symbol}</span>
+                      </div>
+                    </div>
+                    
                     <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-pink-300 to-yellow-300 rounded-full blur-sm animate-pulse" />
-                      <img
-                        src={apiResponse.LogoURI}
-                        alt="Token Logo"
-                        className="relative w-10 h-10 rounded-full border-2 border-white shadow-lg"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-gray-800 font-bold">
-                        {apiResponse.symbol}
-                      </p>
-                      <p className="text-gray-500 text-sm">
-                        {apiResponse.name}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-gray-800 font-bold">
-                        {quoteData ? quoteData : "0.00"}
-                      </p>
-                   
+                      <div className="text-3xl font-light text-gray-700">
+                        {quoteData ? Number(quoteData).toLocaleString('en-US', { maximumFractionDigits: 6 }) : "0.00"}
+                      </div>
+                      <div className="absolute right-0 top-1/2 -translate-y-1/2">
+                        <span className="text-sm text-gray-400">{apiResponse.symbol}</span>
+                      </div>
                     </div>
                   </div>
+                )}
+
+                {/* Swap Button */}
+                <button
+                  onClick={handleSwap}
+                  disabled={!bnbAmount || Number(bnbAmount) <= 0}
+                  className="w-full mt-2 py-4 px-6 rounded-xl font-medium text-white
+                    bg-gradient-to-r from-blue-500 to-purple-500
+                    disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed
+                    hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200
+                    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                >
+                  {isLoading ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <RefreshCw className="w-5 h-5 animate-spin" />
+                      <span>Loading...</span>
+                    </div>
+                  ) : (
+                    <span>Swap</span>
+                  )}
+                </button>
+
+                {/* Price Impact & Route Info (Optional) */}
+                <div className="mt-4 space-y-2 text-sm text-gray-500">
+                  <div className="flex justify-between">
+                    <span>Price Impact</span>
+                    <span className="text-gray-700">~0.05%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Route</span>
+                    <span className="text-gray-700">BNB → {apiResponse?.symbol}</span>
+                  </div>
                 </div>
-              )}
-              {/* Swap Button */}
-              <button
-                onClick={handleSwap}
-                className="w-full py-4 rounded-xl font-bold transition-all duration-300 transform bg-gradient-to-r from-cyan-400 via-pink-300 to-yellow-300 text-white hover:opacity-90 active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
-              >
-                Swap
-              </button>
+              </div>
             </>
           )}
 
@@ -545,11 +569,7 @@ useEffect(() => {
 
 
           {/* Footer */}
-          <div className="pt-2">
-            <p className="text-center text-sm font-medium bg-gradient-to-r from-cyan-400 via-pink-400 to-yellow-400 bg-clip-text text-transparent">
-              Powered by winks.fun
-            </p>
-          </div>
+    
         </div>
       </div>
     </div>
