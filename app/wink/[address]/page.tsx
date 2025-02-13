@@ -399,9 +399,9 @@ console.log("sdcdsc", bnbBalance, tokenBalance)
                   <div className="flex items-center space-x-4 mb-4">
                     <img
                       src={
-                        apiResponse?.LogoURI !== null &&
-                        apiResponse?.LogoURI !== undefined
-                          ? apiResponse?.LogoURI
+                        apiResponse?.logoURI !== null &&
+                        apiResponse?.logoURI !== undefined
+                          ? apiResponse?.logoURI
                           : "https://res.cloudinary.com/dvddnptpi/image/upload/v1739379832/frfgvnra42g6x7ovmana.webp"
                       }
                       alt="Token Logo"
@@ -523,7 +523,7 @@ console.log("sdcdsc", bnbBalance, tokenBalance)
                       <div className="flex items-center gap-2">
                         <img
                           src={
-                            apiResponse?.LogoURI ||
+                            apiResponse?.logoURI ||
                             "https://res.cloudinary.com/dvddnptpi/image/upload/v1739379832/frfgvnra42g6x7ovmana.webp"
                           }
                           alt={apiResponse.symbol}
