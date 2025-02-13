@@ -386,15 +386,15 @@ const SolanaSwapUI: React.FC = () => {
         {/* Main card */}
         <div className="relative bg-white shadow-2xl rounded-2xl p-3 space-y-4 border border-white">
           {/* Connect Button */}
-          <div className="flex justify-between items-center px-4">
+          <div className="flex justify-between items-center">
             {!showAdditionalUI && (
-              <div className="flex items-baseline">
+              <div className="flex items-baseline bg-gray-100/50 border border-gray-500/10 p-2 px-4 rounded-xl">
                 <div className="flex items-center gap-3">
-                  <span className="text-gray-600 font-medium">
+                  <span className="text-black font-medium">
                     Your Points:
                   </span>
                 </div>
-                <span className="text-2xl font-bold text-purple-600">
+                <span className=" font-bold text-purple-600">
                   {points || 0}
                 </span>
               </div>
