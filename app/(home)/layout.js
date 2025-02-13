@@ -25,7 +25,7 @@ export async function generateMetadata() {
       'twitter:player': 'https://bnb-memecoin-swap-wink-bfdwy.ondigitalocean.app',
       'twitter:player:width': '360',
       'twitter:player:height': '560',
-      'twitter:image': 'https://res.cloudinary.com/dvddnptpi/image/upload/v1739295236/v88tpojl9qcfwdwbcsgm.png',
+      'twitter:image': 'https://res.cloudinary.com/dvddnptpi/image/upload/v1739442596/rq0wjymypjel3pg6xziu.png',
     },
   };
 }

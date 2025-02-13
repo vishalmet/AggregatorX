@@ -39,7 +39,7 @@ export async function generateMetadata({ params }) {
       "twitter:player:width": "360",
       "twitter:player:height": "560",
       "twitter:image":
-        "https://res.cloudinary.com/dvddnptpi/image/upload/v1739295236/v88tpojl9qcfwdwbcsgm.png",
+        "https://res.cloudinary.com/dvddnptpi/image/upload/v1739442596/rq0wjymypjel3pg6xziu.png",
     },
   };
 }
