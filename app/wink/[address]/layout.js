@@ -17,7 +17,7 @@ export async function generateMetadata({ params }) {
   const url = typeof window !== 'undefined' ? window.location.href : '';
   
   console.log("Current URL:", url);
-  const baseUrl = "https://f316-2406-7400-c4-de68-948d-2775-72a8-75e.ngrok-free.app";
+  const baseUrl = "https://bnb-memecoin-swap-wink-bfdwy.ondigitalocean.app";
   const {address} = await params;
 
   console.log("baseUrl", baseUrl);

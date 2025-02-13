@@ -22,7 +22,7 @@ export async function generateMetadata() {
       'twitter:site': '@winksdotfun',
       'twitter:title': 'BNB Swap Wink by winks.fun',
       'twitter:description': 'Swap crypto on X.',
-      'twitter:player': 'https://f316-2406-7400-c4-de68-948d-2775-72a8-75e.ngrok-free.app',
+      'twitter:player': 'https://bnb-memecoin-swap-wink-bfdwy.ondigitalocean.app',
       'twitter:player:width': '360',
       'twitter:player:height': '560',
       'twitter:image': 'https://res.cloudinary.com/dvddnptpi/image/upload/v1739295236/v88tpojl9qcfwdwbcsgm.png',

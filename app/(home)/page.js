@@ -52,7 +52,7 @@ export default function Home() {
     const baseUrl =
       typeof window !== "undefined" && window.location.hostname === "localhost"
         ? "http://localhost:3000"
-        : "https://bnbswap-winks.vercel.app";
+        : "https://bnb-memecoin-swap-wink-bfdwy.ondigitalocean.app";
     const link = `${baseUrl}/wink/${address}`;
     setGeneratedLink(link);
   };
