@@ -315,6 +315,8 @@ console.log("sdcdsc", bnbBalance, tokenBalance)
   }, [bnbAmount, destAddress]);
 
   useEffect(() => {
+    if (!destAddress) return;
+    
     const fetchData = async () => {
       console.log("destAddress", destAddress);
       setIsLoading(true);
@@ -336,7 +338,7 @@ console.log("sdcdsc", bnbBalance, tokenBalance)
     // if (showAdditionalUI) {
     //   fetchData();
     // }
-  }, []);
+  }, [destAddress]);
 
   const ResData = apiResponse;
   console.log("====================================");
@@ -515,6 +517,8 @@ console.log("sdcdsc", bnbBalance, tokenBalance)
                     <ArrowRight className="w-4 h-4 text-gray-400" />
                   </div>
                 </div>
+
+
 
                 {/* Output Card */}
                 {apiResponse && (
