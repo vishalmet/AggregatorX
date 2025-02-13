@@ -47,6 +47,7 @@ const SolanaSwapUI: React.FC = () => {
 
   const [bnbBal, setBnbBal] = useState<string>("");
   const [memeBal, setMemeBal] = useState<string>("");
+  const [currentPoints, setCurrentPoints] = useState<any | null>(null);
 
   const handleBnbAmountChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -193,10 +194,10 @@ const SolanaSwapUI: React.FC = () => {
 
     const receipt = await waitForTransaction(res);
     console.log("Transaction receipt: ", receipt);
+
     setSuccess(true);
     setTxnHash(receipt.transactionHash);
     if (address) {
-      // assuming you have access to the wallet address from wagmi
       await updatePoints(address);
     }
   };
@@ -230,6 +231,9 @@ const SolanaSwapUI: React.FC = () => {
       );
       const data = await response.json();
       console.log("Points updated:", data);
+      if (address) {
+        await getPoints(address);
+      }
     } catch (error) {
       console.error("Error updating points:", error);
     }
@@ -243,6 +247,7 @@ const SolanaSwapUI: React.FC = () => {
       );
       const data = await response.json();
       console.log("Current points:", data.points);
+      setCurrentPoints(data.points);
       return data.points;
     } catch (error) {
       console.error("Error fetching points:", error);
@@ -381,8 +386,22 @@ const SolanaSwapUI: React.FC = () => {
         {/* Main card */}
         <div className="relative bg-white shadow-2xl rounded-2xl p-3 space-y-4 border border-white">
           {/* Connect Button */}
-          <div className="flex justify-end mb-2">
-            <ConnectButton />
+          <div className="flex justify-between items-center px-4">
+            {!showAdditionalUI && (
+              <div className="flex items-baseline">
+                <div className="flex items-center gap-3">
+                  <span className="text-gray-600 font-medium">
+                    Your Points:
+                  </span>
+                </div>
+                <span className="text-2xl font-bold text-purple-600">
+                  {points || 0}
+                </span>
+              </div>
+            )}
+            <div className=" flex justify-end ml-auto">
+              <ConnectButton />
+            </div>
           </div>
           {/* {!showAdditionalUI && (
             <div className="">
@@ -390,80 +409,68 @@ const SolanaSwapUI: React.FC = () => {
             </div>
           )} */}
           {!showAdditionalUI && (
-            <div className="">
-              {/* Main card */}
-              <div className=" rounded-2xl p-3 space-y-4 border border-gray-200">
-                {/* Points Display */}
-                <div className="bg-gray-50 p-2 rounded-xl border border-gray-200">
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600 mb-1">Your Points</p>
-                    <div className="text-3xl font-bold text-gray-900">
-                      {points || 0}
+            <div className="max-w-md mx-auto">
+              <div className="rounded-3xl overflow-hidden p-0.5 ">
+                <div className="bg-white rounded-[22px] border border-gray-500/50 p-3 px-4">
+                  {/* Header with Large Token Display */}
+                  <div className="flex flex-col items-center">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-200 to-blue-200 rounded-full blur-lg opacity-50"></div>
+                      <img
+                        src={
+                          apiResponse?.logoURI !== null &&
+                          apiResponse?.logoURI !== undefined
+                            ? apiResponse?.logoURI
+                            : "https://res.cloudinary.com/dvddnptpi/image/upload/v1739379832/frfgvnra42g6x7ovmana.webp"
+                        }
+                        alt="Token Logo"
+                        className="relative w-16 h-16 rounded-full border-4 border-white shadow-xl"
+                      />
                     </div>
-                  </div>
-                </div>
-
-                {/* Memecoin Card */}
-                <div className="p-2 px-4 rounded-xl bg-gray-50 border border-gray-200">
-                  {/* Token Info */}
-                  <div className="flex items-center space-x-4 mb-4">
-                    <img
-                      src={
-                        apiResponse?.logoURI !== null &&
-                        apiResponse?.logoURI !== undefined
-                          ? apiResponse?.logoURI
-                          : "https://res.cloudinary.com/dvddnptpi/image/upload/v1739379832/frfgvnra42g6x7ovmana.webp"
-                      }
-                      alt="Token Logo"
-                      className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
-                    />
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900">
-                        {apiResponse?.name || "Loading..."}
-                      </h3>
-                      <p className="text-gray-600 text-sm">
-                        {apiResponse?.symbol || "MEME"}
-                      </p>
-                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 mb-1 mt-2">
+                      {apiResponse?.name || "Loading..."}{" "}
+                      <span className="text-sm text-gray-500 font-semibold">
+                        ({apiResponse?.symbol || "MEME"})
+                      </span>
+                    </h2>
+                    <p className="text-sm text-gray-500 font-semibold"></p>
                   </div>
 
-                  {/* Description */}
-                  <p className="text-gray-600 text-sm mb-4">
-                    Buy {apiResponse?.symbol || "meme"} tokens with BNB in one
-                    click and earn points!
-                  </p>
+                  {/* Price Impact Banner */}
+                  <div className="bg-gradient-to-r from-purple-100 to-blue-100 rounded-xl p-2 px-4">
+                    <p className="text-sm text-center text-gray-700 font-medium">
+                      Buy{" "}
+                      <span className=" font-semibold">
+                        {apiResponse?.symbol || "meme"}
+                      </span>{" "}
+                      tokens with BNB in one click and earn points!
+                    </p>
+                  </div>
 
-                  {/* Button */}
+                  {/* Points Display as a Highlight */}
+                  {/* <div className=" mt-2 bg-gray-50 rounded-xl p-2 px-4 border border-gray-100 flex justify-between items-center"> */}
+
                   <button
-                    className="w-full flex items-center justify-center p-3 rounded-xl font-semibold
-                         bg-blue-600 text-white
-                         hover:bg-blue-700 active:scale-[0.98]
-                         disabled:opacity-50 disabled:cursor-not-allowed
-                         transition-all duration-200"
                     onClick={handleContinue}
+                    className="w-full mt-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl p-3 px-6 font-bold text-base 
+                            flex items-center justify-center gap-2 
+                            hover:opacity-90 transition-all duration-200
+                            hover:scale-95
+                            disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <span className="mr-2">Continue</span>
-                    <ArrowRight className="w-4 h-4" />
+                    Continue to Buy
+                    <ArrowRight className="w-5 h-5" />
                   </button>
-                </div>
+                  {/* </div> */}
 
-                {/* Stats Cards */}
-                {/* <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-50 p-3 rounded-xl text-center border border-gray-200">
-              <p className="text-sm text-gray-600">Current Price</p>
-              <p className="font-bold text-gray-900">${apiResponse?.price || "0.00"}</p>
-            </div>
-            <div className="bg-gray-50 p-3 rounded-xl text-center border border-gray-200">
-              <p className="text-sm text-gray-600">24h Volume</p>
-              <p className="font-bold text-gray-900">${apiResponse?.volume24h || "0.00"}</p>
-            </div>
-          </div> */}
+                  {/* Action Button */}
 
-                {/* Footer */}
-                <div className="pt-4">
-                  <p className="text-center text-sm font-medium text-gray-600">
-                    Powered by winks.fun
-                  </p>
+                  {/* Footer */}
+                  <div className="mt-3 text-center">
+                    <p className="text-sm text-gray-500">
+                      Powered by winks.fun
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -489,7 +496,7 @@ const SolanaSwapUI: React.FC = () => {
 
               <div className="space-y-3">
                 {/* Input Card */}
-                <div className="bg-white/40 backdrop-blur-md rounded-2xl p-4">
+                <div className="bg-white/40 border border-gray-400/50 backdrop-blur-md rounded-2xl p-4">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <img
@@ -510,7 +517,7 @@ const SolanaSwapUI: React.FC = () => {
                       placeholder="0.0"
                       value={bnbAmount}
                       onChange={handleBnbAmountChange}
-                      className="w-full text-3xl font-light bg-transparent border-none focus:outline-none focus:ring-0 p-0 text-gray-700 placeholder-gray-300"
+                      className="w-full text-xl font-medium bg-transparent border-none focus:outline-none focus:ring-0 p-0 text-gray-700 placeholder-gray-300"
                     />
                     <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2">
                       {/* <button className="text-sm text-blue-500 hover:text-blue-600">
@@ -530,7 +537,7 @@ const SolanaSwapUI: React.FC = () => {
 
                 {/* Output Card */}
                 {apiResponse && (
-                  <div className="bg-white/40 backdrop-blur-md rounded-2xl p-4">
+                  <div className="bg-white/40 border border-gray-400/50 backdrop-blur-md rounded-2xl p-4">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <img
@@ -551,7 +558,7 @@ const SolanaSwapUI: React.FC = () => {
                     </div>
 
                     <div className="relative">
-                      <div className="text-3xl font-light text-gray-700">
+                      <div className="text-xl font-medium text-gray-700">
                         {quoteData
                           ? Number(quoteData).toLocaleString("en-US", {
                               maximumFractionDigits: 6,
@@ -624,7 +631,7 @@ const SolanaSwapUI: React.FC = () => {
           )}
 
           {success && (
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-100/90 via-pink-100/90 to-yellow-100/90 backdrop-blur-lg flex items-center justify-center z-50 font-mono">
+            <div className="absolute inset-0 bg-white backdrop-blur-lg flex items-center justify-center z-50 font-mono">
               <div className="relative w-full max-w-md mx-4">
                 {/* Background glow effects */}
                 <div className="absolute top-0 left-1/4 w-32 h-32 bg-cyan-300/30 rounded-full blur-xl" />
@@ -643,13 +650,19 @@ const SolanaSwapUI: React.FC = () => {
 
                     {/* Success message */}
                     <div className="space-y-3 text-center">
-                      <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-600 via-pink-600 to-yellow-600 bg-clip-text text-transparent">
+                      <h2 className="text-2xl font-bold text-black">
                         Transaction Successful!
                       </h2>
-                      <div className="bg-green-50 rounded-xl p-4 border border-green-100">
-                        <p className="text-green-700 font-medium">
-                          You have been credited with 10 points! 🎉
+                      <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-3 border border-blue-100/50">
+                        <p className="text-gray-700 font-semibold text-lg mb-3">
+                          You earned 10 points!
                         </p>
+                        <div className="flex justify-center items-center gap-2 text-sm text-gray-600">
+                          <span>Current Points:</span>
+                          <span className="font-bold text-purple-600 text-lg">
+                            {currentPoints}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
@@ -661,7 +674,7 @@ const SolanaSwapUI: React.FC = () => {
                       className="group flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors duration-200"
                     >
                       <ExternalLink className="w-4 h-4" />
-                      <span>View Transaction</span>
+                      <span>View on BSCscan</span>
                     </a>
 
                     {/* Share button */}
