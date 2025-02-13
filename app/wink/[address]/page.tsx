@@ -16,8 +16,7 @@ import { useWalletClient, useAccount, useBalance } from "wagmi";
 import { parseEther } from "viem";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import { ethers } from 'ethers';
-
+import { ethers } from "ethers";
 
 interface Token {
   symbol: string;
@@ -81,10 +80,11 @@ const SolanaSwapUI: React.FC = () => {
   const [quoteData, setQuoteData] = useState<any | null>(null);
   const [weiAmount, setWeiAmount] = useState<string>("");
   const [success, setSuccess] = useState<boolean | null>(false);
-  const [txnHash, setTxnHash] = useState<string>(""); 
+  const [txnHash, setTxnHash] = useState<string>("");
 
-
-  const handleBnbAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBnbAmountChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const newBnbAmount = event.target.value;
     setBnbAmount(newBnbAmount);
 
@@ -99,6 +99,29 @@ const SolanaSwapUI: React.FC = () => {
   };
 
   const { isConnected, address } = useAccount();
+  useEffect(() => {
+    if (isConnected && address) {
+      registerWallet(address);
+    }
+  }, [isConnected, address]);
+
+  const registerWallet = async (walletAddress: string) => {
+    try {
+      const response = await fetch("http://localhost:3001/api/wallet", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ address: walletAddress }),
+      });
+      const data = await response.json();
+      console.log("Wallet registered:", data);
+      setPoints(data.points);
+    } catch (error) {
+      console.error("Error registering wallet:", error);
+    }
+  };
+
   const params = useParams();
   const destAddress = params.address;
   console.log("destAddress", destAddress);
@@ -188,8 +211,8 @@ const SolanaSwapUI: React.FC = () => {
     });
 
     const { waitForTransactionReceipt } = await import("viem/actions");
-    const receipt = await waitForTransactionReceipt(client, { 
-      hash: hash as `0x${string}` 
+    const receipt = await waitForTransactionReceipt(client, {
+      hash: hash as `0x${string}`,
     });
     return receipt;
   }
@@ -206,6 +229,10 @@ const SolanaSwapUI: React.FC = () => {
     console.log("Transaction receipt: ", receipt);
     setSuccess(true);
     setTxnHash(receipt.transactionHash);
+    if (address) {
+      // assuming you have access to the wallet address from wagmi
+      await updatePoints(address);
+    }
   };
 
   async function buildTxForSwap(swapParams: any) {
@@ -223,44 +250,71 @@ const SolanaSwapUI: React.FC = () => {
     }
   }
 
+  const updatePoints = async (walletAddress: string) => {
+    try {
+      const response = await fetch("http://localhost:3001/api/points/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ address: walletAddress }),
+      });
+      const data = await response.json();
+      console.log("Points updated:", data);
+    } catch (error) {
+      console.error("Error updating points:", error);
+    }
+  };
+
+  // To display points
+const getPoints = async (walletAddress: string) => {
+  try {
+    const response = await fetch(`http://localhost:3001/api/points/${walletAddress}`)
+    const data = await response.json()
+    console.log('Current points:', data.points)
+    return data.points
+  } catch (error) {
+    console.error('Error fetching points:', error)
+  }
+}
+
+
   const srcAddress = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
   const dstAddress = destAddress;
   const fetchData = async () => {
     setIsLoading(true);
     const weiAmountNumber = Number(weiAmount);
-    if(weiAmountNumber <= 0){  
-        return;
+    if (weiAmountNumber <= 0) {
+      return;
     }
     try {
-  
+      console.log(weiAmount);
+      const response = await axios.post("/api/quote-proxy", {
+        src: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        dst: destAddress,
+        amount: weiAmount,
+      });
 
-        console.log(weiAmount);
-        const response = await axios.post('/api/quote-proxy', {
-            src: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-            dst: destAddress,
-            amount: weiAmount
-        });
-        
-        if(response.status === 200) {
-            // Convert wei to ETH before setting the quote data
-            const ethAmount = ethers.utils.formatEther(response.data.dstAmount);
-            console.log("ethAmount", ethAmount);
-            setQuoteData(ethAmount);
-        }
-        console.log(response.data);
+      if (response.status === 200) {
+        // Convert wei to ETH before setting the quote data
+        const ethAmount = ethers.utils.formatEther(response.data.dstAmount);
+        console.log("ethAmount", ethAmount);
+        setQuoteData(ethAmount);
+      }
+      console.log(response.data);
     } catch (error) {
-        console.error(error);
-        setQuoteData({ error: 'Failed to fetch quote' });
+      console.error(error);
+      setQuoteData({ error: "Failed to fetch quote" });
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-};
+  };
 
-useEffect(() => {
+  useEffect(() => {
     if (bnbAmount && destAddress) {
-        fetchData();
+      fetchData();
     }
-}, [bnbAmount, destAddress]);
+  }, [bnbAmount, destAddress]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -297,9 +351,12 @@ useEffect(() => {
 
   const handleShare = () => {
     const tweetText = `Just swapped tokens on winks.fun! Join me and earn points! 🚀\n\nhttps://bnbswap-winks.vercel.app/wink/${destAddress}`;
-    window.open(`https://twitter.com/intent/post?text=${encodeURIComponent(tweetText)}`, '_blank', 'width=600,height=400');
+    window.open(
+      `https://twitter.com/intent/post?text=${encodeURIComponent(tweetText)}`,
+      "_blank",
+      "width=600,height=400"
+    );
   };
- 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-200 via-pink-100 to-yellow-100 text-gray-800 flex items-center justify-center p-4 font-mono relative overflow-hidden">
@@ -344,8 +401,10 @@ useEffect(() => {
                   <div className="flex items-center space-x-4 mb-4">
                     <img
                       src={
-                        apiResponse?.LogoURI !== null && apiResponse?.LogoURI !== undefined ? apiResponse?.LogoURI :
-                        "https://res.cloudinary.com/dvddnptpi/image/upload/v1739379832/frfgvnra42g6x7ovmana.webp"
+                        apiResponse?.LogoURI !== null &&
+                        apiResponse?.LogoURI !== undefined
+                          ? apiResponse?.LogoURI
+                          : "https://res.cloudinary.com/dvddnptpi/image/upload/v1739379832/frfgvnra42g6x7ovmana.webp"
                       }
                       alt="Token Logo"
                       className="w-16 h-16 rounded-full border-2 border-white shadow-sm"
@@ -405,8 +464,16 @@ useEffect(() => {
             <>
               {errorMessage && (
                 <div className="flex items-center text-sm justify-center gap-2 p-3 mb-4 text-red-600 bg-red-50/60 backdrop-blur-sm rounded-lg border-l-4 border-red-500 animate-slideIn">
-                  <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  <svg
+                    className="w-4 h-4"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   {errorMessage}
                 </div>
@@ -426,7 +493,7 @@ useEffect(() => {
                     </div>
                     <div className="text-sm text-gray-500">Balance: 0.00</div>
                   </div>
-                  
+
                   <div className="relative">
                     <input
                       type="number"
@@ -436,7 +503,9 @@ useEffect(() => {
                       className="w-full text-3xl font-light bg-transparent border-none focus:outline-none focus:ring-0 p-0 text-gray-700 placeholder-gray-300"
                     />
                     <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                      <button className="text-sm text-blue-500 hover:text-blue-600">MAX</button>
+                      <button className="text-sm text-blue-500 hover:text-blue-600">
+                        MAX
+                      </button>
                       <span className="text-sm text-gray-400">BNB</span>
                     </div>
                   </div>
@@ -455,20 +524,31 @@ useEffect(() => {
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <img
-                          src={apiResponse?.LogoURI || "https://res.cloudinary.com/dvddnptpi/image/upload/v1739379832/frfgvnra42g6x7ovmana.webp"}
+                          src={
+                            apiResponse?.LogoURI ||
+                            "https://res.cloudinary.com/dvddnptpi/image/upload/v1739379832/frfgvnra42g6x7ovmana.webp"
+                          }
                           alt={apiResponse.symbol}
                           className="w-8 h-8 rounded-full ring-2 ring-purple-400/50"
                         />
-                        <span className="font-medium text-gray-700">{apiResponse.symbol}</span>
+                        <span className="font-medium text-gray-700">
+                          {apiResponse.symbol}
+                        </span>
                       </div>
                     </div>
-                    
+
                     <div className="relative">
                       <div className="text-3xl font-light text-gray-700">
-                        {quoteData ? Number(quoteData).toLocaleString('en-US', { maximumFractionDigits: 6 }) : "0.00"}
+                        {quoteData
+                          ? Number(quoteData).toLocaleString("en-US", {
+                              maximumFractionDigits: 6,
+                            })
+                          : "0.00"}
                       </div>
                       <div className="absolute right-0 top-1/2 -translate-y-1/2">
-                        <span className="text-sm text-gray-400">{apiResponse.symbol}</span>
+                        <span className="text-sm text-gray-400">
+                          {apiResponse.symbol}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -502,74 +582,74 @@ useEffect(() => {
                   </div>
                   <div className="flex justify-between">
                     <span>Route</span>
-                    <span className="text-gray-700">BNB → {apiResponse?.symbol}</span>
+                    <span className="text-gray-700">
+                      BNB → {apiResponse?.symbol}
+                    </span>
                   </div>
                 </div>
               </div>
             </>
           )}
 
-{success && (
+          {success && (
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-100/90 via-pink-100/90 to-yellow-100/90 backdrop-blur-lg flex items-center justify-center z-50 font-mono">
-            <div className="relative w-full max-w-md mx-4">
-              {/* Background glow effects */}
-              <div className="absolute top-0 left-1/4 w-32 h-32 bg-cyan-300/30 rounded-full blur-xl" />
-              <div className="absolute bottom-0 right-1/4 w-32 h-32 bg-pink-300/30 rounded-full blur-xl" />
-              
-              {/* Main content card */}
-              <div className="relative bg-white/70 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white">
-                <div className="flex flex-col items-center justify-center space-y-6">
-                  {/* Success animation */}
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-green-400/20 rounded-full blur-md animate-pulse" />
-                    <div className="relative animate-bounce">
-                      <CheckCircle className="w-16 h-16 text-green-500" />
+              <div className="relative w-full max-w-md mx-4">
+                {/* Background glow effects */}
+                <div className="absolute top-0 left-1/4 w-32 h-32 bg-cyan-300/30 rounded-full blur-xl" />
+                <div className="absolute bottom-0 right-1/4 w-32 h-32 bg-pink-300/30 rounded-full blur-xl" />
+
+                {/* Main content card */}
+                <div className="relative bg-white/70 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white">
+                  <div className="flex flex-col items-center justify-center space-y-6">
+                    {/* Success animation */}
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-green-400/20 rounded-full blur-md animate-pulse" />
+                      <div className="relative animate-bounce">
+                        <CheckCircle className="w-16 h-16 text-green-500" />
+                      </div>
                     </div>
-                  </div>
-        
-                  {/* Success message */}
-                  <div className="space-y-3 text-center">
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-600 via-pink-600 to-yellow-600 bg-clip-text text-transparent">
-                      Transaction Successful!
-                    </h2>
-                    <div className="bg-green-50 rounded-xl p-4 border border-green-100">
-                      <p className="text-green-700 font-medium">
-                        You have been credited with 10 points! 🎉
-                      </p>
+
+                    {/* Success message */}
+                    <div className="space-y-3 text-center">
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-600 via-pink-600 to-yellow-600 bg-clip-text text-transparent">
+                        Transaction Successful!
+                      </h2>
+                      <div className="bg-green-50 rounded-xl p-4 border border-green-100">
+                        <p className="text-green-700 font-medium">
+                          You have been credited with 10 points! 🎉
+                        </p>
+                      </div>
                     </div>
-                  </div>
-        
-                  {/* Transaction link */}
-                  <a
-                    href={`https://bscscan.com/tx/${txnHash}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors duration-200"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    <span>View Transaction</span>
-                  </a>
-        
-                  {/* Share button */}
-                  <button
-                    onClick={handleShare}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold
+
+                    {/* Transaction link */}
+                    <a
+                      href={`https://bscscan.com/tx/${txnHash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors duration-200"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      <span>View Transaction</span>
+                    </a>
+
+                    {/* Share button */}
+                    <button
+                      onClick={handleShare}
+                      className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold
                              bg-gradient-to-r from-cyan-500 via-pink-500 to-yellow-500 text-white
                              hover:opacity-90 active:scale-[0.98] transition-all duration-200
                              shadow-lg hover:shadow-xl"
-                  >
-                    <Share2 className="w-5 h-5" />
-                    Refer your friends
-                  </button>
+                    >
+                      <Share2 className="w-5 h-5" />
+                      Refer your friends
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           )}
 
-
           {/* Footer */}
-    
         </div>
       </div>
     </div>
