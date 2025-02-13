@@ -17,7 +17,7 @@ export async function generateMetadata({ params }) {
   const url = typeof window !== 'undefined' ? window.location.href : '';
   
   console.log("Current URL:", url);
-  const baseUrl = "https://bnb-memecoin-swap-wink-bfdwy.ondigitalocean.app";
+  const baseUrl = "https://buymemes.winks.fun";
   const {address} = await params;
 
   console.log("baseUrl", baseUrl);
