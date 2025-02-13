@@ -107,7 +107,7 @@ const SolanaSwapUI: React.FC = () => {
 
   const registerWallet = async (walletAddress: string) => {
     try {
-      const response = await fetch("http://localhost:3001/api/wallet", {
+      const response = await fetch("https://bnbswapapi.vercel.app/api/wallet", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -252,7 +252,7 @@ const SolanaSwapUI: React.FC = () => {
 
   const updatePoints = async (walletAddress: string) => {
     try {
-      const response = await fetch("http://localhost:3001/api/points/add", {
+      const response = await fetch("https://bnbswapapi.vercel.app/api/points/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -269,7 +269,7 @@ const SolanaSwapUI: React.FC = () => {
   // To display points
 const getPoints = async (walletAddress: string) => {
   try {
-    const response = await fetch(`http://localhost:3001/api/points/${walletAddress}`)
+    const response = await fetch(`https://bnbswapapi.vercel.app/api/points/${walletAddress}`)
     const data = await response.json()
     console.log('Current points:', data.points)
     return data.points
