@@ -358,6 +358,17 @@ console.log("sdcdsc", bnbBalance, tokenBalance)
     );
   };
 
+  const getCurrentUrl = () => {
+    if (typeof window !== 'undefined') {
+      return window.location.href;
+    }
+    return '';
+  };
+
+  useEffect(() => {
+    console.log("Current URL:", getCurrentUrl());
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-200 via-pink-100 to-yellow-100 text-gray-800 flex items-center justify-center p-4 font-mono relative overflow-hidden">
       {/* Animated background patterns */}
