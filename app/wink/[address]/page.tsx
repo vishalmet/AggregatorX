@@ -48,6 +48,9 @@ const SolanaSwapUI: React.FC = () => {
   const [success, setSuccess] = useState<boolean | null>(false);
   const [txnHash, setTxnHash] = useState<string>("");
 
+  const [bnbBal, setBnbBal] = useState<string>("");
+  const [memeBal, setMemeBal] = useState<string>("");
+
   const handleBnbAmountChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -63,6 +66,8 @@ const SolanaSwapUI: React.FC = () => {
       setWeiAmount(""); // Clear weiAmount on error
     }
   };
+
+  
 
   const { isConnected, address } = useAccount();
   useEffect(() => {
@@ -87,6 +92,9 @@ const SolanaSwapUI: React.FC = () => {
       console.error("Error registering wallet:", error);
     }
   };
+
+
+  
 
   const params = useParams();
   const destAddress = params.address;
@@ -245,6 +253,30 @@ const getPoints = async (walletAddress: string) => {
 }
 
 
+const { data: bnbBalance } = useBalance({
+  address: address, // user's wallet address
+});
+
+
+
+const { data: tokenBalance } = useBalance({
+  address: address,
+  token: destAddress as `0x${string}`, // destination token address
+});
+
+  useEffect(() => {
+    if (bnbBalance) {
+      setBnbBal(bnbBalance?.formatted)
+    }
+    if (tokenBalance) {
+      setMemeBal(tokenBalance?.formatted)
+    }
+
+  }, [bnbBalance, tokenBalance]);
+  
+
+console.log("sdcdsc", bnbBalance, tokenBalance)
+
   const srcAddress = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
   const dstAddress = destAddress;
   const fetchData = async () => {
@@ -337,7 +369,7 @@ const getPoints = async (walletAddress: string) => {
         {/* Card glow effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-pink-100 to-yellow-300 rounded-2xl blur opacity-70" />
         {/* Main card */}
-        <div className="relative bg-white shadow-2xl rounded-2xl p-6 space-y-4 border border-white">
+        <div className="relative bg-white shadow-2xl rounded-2xl p-3 space-y-4 border border-white">
           {/* Connect Button */}
           <div className="flex justify-end mb-2">
             <ConnectButton />
@@ -350,9 +382,9 @@ const getPoints = async (walletAddress: string) => {
           {!showAdditionalUI && (
             <div className="">
               {/* Main card */}
-              <div className="bg-white shadow-lg rounded-2xl p-6 space-y-4 border border-gray-200">
+              <div className=" rounded-2xl p-3 space-y-4 border border-gray-200">
                 {/* Points Display */}
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                <div className="bg-gray-50 p-2 rounded-xl border border-gray-200">
                   <div className="text-center">
                     <p className="text-sm text-gray-600 mb-1">Your Points</p>
                     <div className="text-3xl font-bold text-gray-900">
@@ -362,7 +394,7 @@ const getPoints = async (walletAddress: string) => {
                 </div>
 
                 {/* Memecoin Card */}
-                <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+                <div className="p-2 px-4 rounded-xl bg-gray-50 border border-gray-200">
                   {/* Token Info */}
                   <div className="flex items-center space-x-4 mb-4">
                     <img
@@ -373,13 +405,13 @@ const getPoints = async (walletAddress: string) => {
                           : "https://res.cloudinary.com/dvddnptpi/image/upload/v1739379832/frfgvnra42g6x7ovmana.webp"
                       }
                       alt="Token Logo"
-                      className="w-16 h-16 rounded-full border-2 border-white shadow-sm"
+                      className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
                     />
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900">
+                      <h3 className="text-lg font-bold text-gray-900">
                         {apiResponse?.name || "Loading..."}
                       </h3>
-                      <p className="text-gray-600">
+                      <p className="text-gray-600 text-sm">
                         {apiResponse?.symbol || "MEME"}
                       </p>
                     </div>
@@ -457,7 +489,7 @@ const getPoints = async (walletAddress: string) => {
                       />
                       <span className="font-medium text-gray-700">BNB</span>
                     </div>
-                    <div className="text-sm text-gray-500">Balance: 0.00</div>
+                    <div className="text-sm text-gray-500">Balance: ${bnbBal}</div>
                   </div>
 
                   <div className="relative">
@@ -469,9 +501,9 @@ const getPoints = async (walletAddress: string) => {
                       className="w-full text-3xl font-light bg-transparent border-none focus:outline-none focus:ring-0 p-0 text-gray-700 placeholder-gray-300"
                     />
                     <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                      <button className="text-sm text-blue-500 hover:text-blue-600">
+                      {/* <button className="text-sm text-blue-500 hover:text-blue-600">
                         MAX
-                      </button>
+                      </button> */}
                       <span className="text-sm text-gray-400">BNB</span>
                     </div>
                   </div>
@@ -501,6 +533,8 @@ const getPoints = async (walletAddress: string) => {
                           {apiResponse.symbol}
                         </span>
                       </div>
+                    <div className="text-sm text-gray-500">Balance: ${memeBal}</div>
+
                     </div>
 
                     <div className="relative">
@@ -536,7 +570,7 @@ const getPoints = async (walletAddress: string) => {
                       <span>Loading...</span>
                     </div>
                   ) : (
-                    <span>Swap</span>
+                    <span>Buy</span>
                   )}
                 </button>
 
