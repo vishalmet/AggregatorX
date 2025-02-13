@@ -18,11 +18,8 @@ import axios from "axios";
 import { useParams } from "next/navigation";
 import { ethers } from "ethers";
 
-
-
 const SolanaSwapUI: React.FC = () => {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
-
 
   const [fromAmount, setFromAmount] = useState<string>("");
   const [toAmount, setToAmount] = useState<string>("");
@@ -31,7 +28,7 @@ const SolanaSwapUI: React.FC = () => {
   const [isCopied, setIsCopied] = useState<boolean>(false);
   const [showTooltip, setShowTooltip] = useState<string>("");
   const [isFetchingQuote, setIsFetchingQuote] = useState<boolean>(false);
-  
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [signatureLink, setSignatureLink] = useState<string | null>(null);
@@ -67,8 +64,6 @@ const SolanaSwapUI: React.FC = () => {
     }
   };
 
-  
-
   const { isConnected, address } = useAccount();
   useEffect(() => {
     if (isConnected && address) {
@@ -92,9 +87,6 @@ const SolanaSwapUI: React.FC = () => {
       console.error("Error registering wallet:", error);
     }
   };
-
-
-  
 
   const params = useParams();
   const destAddress = params.address;
@@ -226,13 +218,16 @@ const SolanaSwapUI: React.FC = () => {
 
   const updatePoints = async (walletAddress: string) => {
     try {
-      const response = await fetch("https://bnbswapapi.vercel.app/api/points/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ address: walletAddress }),
-      });
+      const response = await fetch(
+        "https://bnbswapapi.vercel.app/api/points/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ address: walletAddress }),
+        }
+      );
       const data = await response.json();
       console.log("Points updated:", data);
     } catch (error) {
@@ -241,41 +236,38 @@ const SolanaSwapUI: React.FC = () => {
   };
 
   // To display points
-const getPoints = async (walletAddress: string) => {
-  try {
-    const response = await fetch(`https://bnbswapapi.vercel.app/api/points/${walletAddress}`)
-    const data = await response.json()
-    console.log('Current points:', data.points)
-    return data.points
-  } catch (error) {
-    console.error('Error fetching points:', error)
-  }
-}
+  const getPoints = async (walletAddress: string) => {
+    try {
+      const response = await fetch(
+        `https://bnbswapapi.vercel.app/api/points/${walletAddress}`
+      );
+      const data = await response.json();
+      console.log("Current points:", data.points);
+      return data.points;
+    } catch (error) {
+      console.error("Error fetching points:", error);
+    }
+  };
 
+  const { data: bnbBalance } = useBalance({
+    address: address, // user's wallet address
+  });
 
-const { data: bnbBalance } = useBalance({
-  address: address, // user's wallet address
-});
-
-
-
-const { data: tokenBalance } = useBalance({
-  address: address,
-  token: destAddress as `0x${string}`, // destination token address
-});
+  const { data: tokenBalance } = useBalance({
+    address: address,
+    token: destAddress as `0x${string}`, // destination token address
+  });
 
   useEffect(() => {
     if (bnbBalance) {
-      setBnbBal(bnbBalance?.formatted)
+      setBnbBal(bnbBalance?.formatted);
     }
     if (tokenBalance) {
-      setMemeBal(tokenBalance?.formatted)
+      setMemeBal(tokenBalance?.formatted);
     }
-
   }, [bnbBalance, tokenBalance]);
-  
 
-console.log("sdcdsc", bnbBalance, tokenBalance)
+  console.log("sdcdsc", bnbBalance, tokenBalance);
 
   const srcAddress = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
   const dstAddress = destAddress;
@@ -316,7 +308,7 @@ console.log("sdcdsc", bnbBalance, tokenBalance)
 
   useEffect(() => {
     if (!destAddress) return;
-    
+
     const fetchData = async () => {
       console.log("destAddress", destAddress);
       setIsLoading(true);
@@ -359,10 +351,10 @@ console.log("sdcdsc", bnbBalance, tokenBalance)
   };
 
   const getCurrentUrl = () => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       return window.location.href;
     }
-    return '';
+    return "";
   };
 
   useEffect(() => {
@@ -502,7 +494,9 @@ console.log("sdcdsc", bnbBalance, tokenBalance)
                       />
                       <span className="font-medium text-gray-700">BNB</span>
                     </div>
-                    <div className="text-sm text-gray-500">Balance: ${bnbBal}</div>
+                    <div className="text-sm text-gray-500">
+                      Balance: ${bnbBal}
+                    </div>
                   </div>
 
                   <div className="relative">
@@ -529,8 +523,6 @@ console.log("sdcdsc", bnbBalance, tokenBalance)
                   </div>
                 </div>
 
-
-
                 {/* Output Card */}
                 {apiResponse && (
                   <div className="bg-white/40 backdrop-blur-md rounded-2xl p-4">
@@ -548,8 +540,9 @@ console.log("sdcdsc", bnbBalance, tokenBalance)
                           {apiResponse.symbol}
                         </span>
                       </div>
-                    <div className="text-sm text-gray-500">Balance: ${memeBal}</div>
-
+                      <div className="text-sm text-gray-500">
+                        Balance: ${memeBal}
+                      </div>
                     </div>
 
                     <div className="relative">
@@ -572,12 +565,14 @@ console.log("sdcdsc", bnbBalance, tokenBalance)
                 {/* Swap Button */}
                 <button
                   onClick={handleSwap}
-                  disabled={!bnbAmount || Number(bnbAmount) <= 0}
+                  disabled={
+                    !bnbAmount || Number(bnbAmount) <= 0 || !isConnected
+                  }
                   className="w-full mt-2 py-4 px-6 rounded-xl font-medium text-white
-                    bg-gradient-to-r from-blue-500 to-purple-500
-                    disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed
-                    hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200
-                    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+    bg-gradient-to-r from-blue-500 to-purple-500
+    disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed
+    hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200
+    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center gap-2">
@@ -585,7 +580,13 @@ console.log("sdcdsc", bnbBalance, tokenBalance)
                       <span>Loading...</span>
                     </div>
                   ) : (
-                    <span>Buy</span>
+                    <span>
+                      {!isConnected
+                        ? "Connect Wallet"
+                        : !bnbAmount
+                        ? "Enter Amount"
+                        : "Buy"}
+                    </span>
                   )}
                 </button>
 
