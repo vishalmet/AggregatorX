@@ -342,7 +342,7 @@ const SolanaSwapUI: React.FC = () => {
   };
 
   const handleShare = () => {
-    const tweetText = `Just swapped tokens on winks.fun! Join me and earn points! 🚀\n\nhttps://bnbswap-winks.vercel.app/wink/${destAddress}`;
+    const tweetText = `Just bought my favorite memecoin on winks.fun! Join me and earn points! 🚀\n\nhttps://buymemes.winks.fun/wink/${destAddress}`;
     window.open(
       `https://twitter.com/intent/post?text=${encodeURIComponent(tweetText)}`,
       "_blank",
