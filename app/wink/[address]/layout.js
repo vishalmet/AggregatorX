@@ -14,8 +14,14 @@ const geistMono = Geist_Mono({
 });
 
 export async function generateMetadata({ params }) {
-  const baseUrl = "https://bnbswap-winks.vercel.app";
-  const address = params;
+  const url = typeof window !== 'undefined' ? window.location.href : '';
+  console.log("Current URL:", url);
+  const baseUrl = "https://2410-2406-7400-c4-de68-948d-2775-72a8-75e.ngrok-free.app";
+  const address = await params;
+
+  console.log("baseUrl", baseUrl);
+  console.log("address", address);
+  console.log("params", address.address);
 
   return {
     title: "BNB Swap - DEX",
