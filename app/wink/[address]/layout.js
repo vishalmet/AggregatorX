@@ -27,14 +27,14 @@ export async function generateMetadata({ params }) {
   const playerUrl = `${baseUrl}/wink/${address}`;
 
   return {
-    title: "BNB Swap - DEX",
-    description: "Swap BNB tokens quickly and easily on BNB Swap, a decentralized exchange.",
+    title: " Buy memecoins with 1-click from Twitter!",
+    description: "Use any EVM wallet to buy your favorite memecoin from any EVM chain! Trade and refer others to earn Winks points.",
     metadataBase: new URL(baseUrl),
     other: {
       "twitter:card": "player",
       "twitter:site": "@winksdotfun",
-      "twitter:title": "BNB swap - Decentralized Exchange",
-      "twitter:description": "Swap BNB tokens quickly and easily on BNB Swap, a decentralized exchange.",
+      "twitter:title": " Buy memecoins with 1-click from Twitter!",
+      "twitter:description": "Use any EVM wallet to buy your favorite memecoin from any EVM chain! Trade and refer others to earn Winks points.",
       "twitter:player": `${playerUrl}`,
       "twitter:player:width": "360",
       "twitter:player:height": "560",

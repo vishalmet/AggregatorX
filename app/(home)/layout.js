@@ -14,14 +14,14 @@ const geistMono = Geist_Mono({
 // Using Next.js's generateMetadata to have more control over meta tags
 export async function generateMetadata() {
   return {
-    title: "bnbswap.winks",
-    description: "Swap crypto on X.",
+    title: " Buy memecoins with 1-click from Twitter!",
+    description: "Use any EVM wallet to buy your favorite memecoin from any EVM chain! Trade and refer others to earn Winks points.",
     // Twitter specific meta tags
     other: {
       'twitter:card': 'player',
       'twitter:site': '@winksdotfun',
-      'twitter:title': 'BNB Swap Wink by winks.fun',
-      'twitter:description': 'Swap crypto on X.',
+      'twitter:title': ' Buy memecoins with 1-click from Twitter!',
+      'twitter:description': 'Use any EVM wallet to buy your favorite memecoin from any EVM chain! Trade and refer others to earn Winks points.',
       'twitter:player': 'https://bnb-memecoin-swap-wink-bfdwy.ondigitalocean.app',
       'twitter:player:width': '360',
       'twitter:player:height': '560',

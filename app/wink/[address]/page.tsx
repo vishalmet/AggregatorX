@@ -668,7 +668,7 @@ const SolanaSwapUI: React.FC = () => {
                     <button
                       onClick={handleShare}
                       className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold
-                             bg-gradient-to-r from-cyan-500 via-pink-500 to-yellow-500 text-white
+                             bg-gradient-to-r from-blue-500 to-purple-500 text-white
                              hover:opacity-90 active:scale-[0.98] transition-all duration-200
                              shadow-lg hover:shadow-xl"
                     >
