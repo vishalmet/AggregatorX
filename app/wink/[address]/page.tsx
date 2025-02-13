@@ -18,43 +18,11 @@ import axios from "axios";
 import { useParams } from "next/navigation";
 import { ethers } from "ethers";
 
-interface Token {
-  symbol: string;
-  balance: number;
-  icon: string;
-}
 
-interface QuoteResponse {
-  inputMint: string;
-  inAmount: string;
-  outputMint: string;
-  outAmount: string;
-  otherAmountThreshold: string;
-  swapMode: string;
-  slippageBps: number;
-  platformFee: {
-    amount: string;
-    feeBps: number;
-  };
-  priceImpactPct: string;
-  routePlan: Array<any>;
-  contextSlot: number;
-  timeTaken: number;
-}
 
 const SolanaSwapUI: React.FC = () => {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  const [fromToken, setFromToken] = useState<Token>({
-    symbol: "SOL",
-    balance: 0,
-    icon: "",
-  });
 
-  const [toToken, setToToken] = useState<Token>({
-    symbol: "USDC",
-    balance: 0,
-    icon: "",
-  });
 
   const [fromAmount, setFromAmount] = useState<string>("");
   const [toAmount, setToAmount] = useState<string>("");
@@ -63,9 +31,7 @@ const SolanaSwapUI: React.FC = () => {
   const [isCopied, setIsCopied] = useState<boolean>(false);
   const [showTooltip, setShowTooltip] = useState<string>("");
   const [isFetchingQuote, setIsFetchingQuote] = useState<boolean>(false);
-  const [quoteResponse, setQuoteResponse] = useState<QuoteResponse | null>(
-    null
-  );
+  
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [signatureLink, setSignatureLink] = useState<string | null>(null);
