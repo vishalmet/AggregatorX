@@ -267,7 +267,7 @@ const SolanaSwapUI: React.FC = () => {
     }
   }, [bnbBalance, tokenBalance]);
 
-  console.log("sdcdsc", bnbBalance, tokenBalance);
+  console.log("balance", bnbBalance, tokenBalance);
 
   const srcAddress = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
   const dstAddress = destAddress;
@@ -360,6 +360,11 @@ const SolanaSwapUI: React.FC = () => {
   useEffect(() => {
     console.log("Current URL:", getCurrentUrl());
   }, []);
+
+  const isAmountGreaterThanBalance =
+    bnbBalance && bnbAmount
+      ? Number(bnbAmount) > Number(bnbBalance?.formatted)
+      : false;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-200 via-pink-100 to-yellow-100 text-gray-800 flex items-center justify-center p-4 font-mono relative overflow-hidden">
@@ -566,13 +571,22 @@ const SolanaSwapUI: React.FC = () => {
                 <button
                   onClick={handleSwap}
                   disabled={
-                    !bnbAmount || Number(bnbAmount) <= 0 || !isConnected
+                    !bnbAmount ||
+                    Number(bnbAmount) <= 0 ||
+                    !isConnected ||
+                    isAmountGreaterThanBalance
                   }
-                  className="w-full mt-2 py-4 px-6 rounded-xl font-medium text-white
-    bg-gradient-to-r from-blue-500 to-purple-500
-    disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed
-    hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200
-    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                  className={`w-full mt-2 py-4 px-6 rounded-xl font-medium text-white
+          bg-gradient-to-r from-blue-500 to-purple-500
+          ${
+            !bnbAmount ||
+            Number(bnbAmount) <= 0 ||
+            !isConnected ||
+            isAmountGreaterThanBalance
+              ? "disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed"
+              : "hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+          }
+          focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2`}
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center gap-2">
@@ -585,6 +599,8 @@ const SolanaSwapUI: React.FC = () => {
                         ? "Connect Wallet"
                         : !bnbAmount
                         ? "Enter Amount"
+                        : isAmountGreaterThanBalance
+                        ? "Insufficient Funds"
                         : "Buy"}
                     </span>
                   )}
