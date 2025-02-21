@@ -20,7 +20,7 @@ export async function generateMetadata({ params }) {
   console.log("Is opened in X.com:", referrer.includes('x.com') || referrer.includes('twitter.com'));
 
   console.log("Current URL:", url);
-  const baseUrl = "https://buymemes.winks.fun";
+  const baseUrl = "https://bnbswap-winks.vercel.app";
   const {address} = await params;
 
   console.log("baseUrl", baseUrl);
