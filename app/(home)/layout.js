@@ -13,6 +13,12 @@ const geistMono = Geist_Mono({
 
 // Using Next.js's generateMetadata to have more control over meta tags
 export async function generateMetadata() {
+
+   const referrer = typeof window !== 'undefined' ? document.referrer : '';
+
+  console.log("Is opened in X.com:", referrer.includes('x.com') || referrer.includes('twitter.com'));
+
+  
   return {
     title: " Buy memecoins with 1-click from Twitter!",
     description: "Use any EVM wallet to buy your favorite memecoin from any EVM chain! Trade and refer others to earn Winks points.",
