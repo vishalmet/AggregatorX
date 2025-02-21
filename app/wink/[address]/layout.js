@@ -15,7 +15,10 @@ const geistMono = Geist_Mono({
 
 export async function generateMetadata({ params }) {
   const url = typeof window !== 'undefined' ? window.location.href : '';
-  
+  const referrer = typeof window !== 'undefined' ? document.referrer : '';
+
+  console.log("Is opened in X.com:", referrer.includes('x.com') || referrer.includes('twitter.com'));
+
   console.log("Current URL:", url);
   const baseUrl = "https://buymemes.winks.fun";
   const {address} = await params;
