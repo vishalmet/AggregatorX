@@ -55,7 +55,7 @@ export default function AddressLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <ReferrerTracker />
+          {/* <ReferrerTracker /> */}
           {children}
         </Providers>
       </body>
