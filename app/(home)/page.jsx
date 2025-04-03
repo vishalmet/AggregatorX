@@ -141,127 +141,22 @@ export default function Home() {
     { name: "PancakeSwap", logo: "/placeholder.svg?height=80&width=80" },
   ]
 
+  const handleScroll = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
-    // <div className="min-h-screen bg-gradient-to-br from-cyan-200 via-pink-100 to-yellow-100 text-gray-800 flex items-center justify-center p-3 font-mono relative overflow-hidden">
-    //   {/* Animated background patterns */}
-    //   <div className="absolute inset-0 bg-white/50">
-    //     <div className="absolute top-0 left-0 w-64 h-64 bg-cyan-300/20 rounded-full -translate-x-1/2 -translate-y-1/2 blur-2xl animate-pulse" />
-    //     <div className="absolute top-1/4 right-0 w-72 h-72 bg-pink-300/20 rounded-full translate-x-1/2 blur-2xl animate-pulse delay-75" />
-    //     <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-yellow-300/20 rounded-full translate-y-1/2 blur-2xl animate-pulse delay-150" />
-    //     <div className="absolute top-1/2 right-1/4 w-56 h-56 bg-cyan-300/20 rounded-full blur-2xl animate-pulse delay-300" />
-    //   </div>
-
-    //   <div className="relative w-full max-w-md">
-    //     {/* Card glow effect */}
-    //     <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-pink-300 to-yellow-300 rounded-2xl blur opacity-70 animate-pulse" />
-
-    //     {/* Main card */}
-    //     <div className="relative bg-white backdrop-blur-md shadow-2xl rounded-2xl p-6 space-y-3 border border-white">
-    //       <div className="text-center">
-    //         <p className="text-gray-600 font-medium">Enter BNB contract address to generate a sharable link</p>
-    //       </div>
-
-    //       {/* Input section */}
-    //       <div className="space-y-2">
-    //         <label className="block text-sm font-medium text-gray-700">
-    //           BNB Contract Address
-    //         </label>
-    //         <div className="relative group">
-    //           <input
-    //             className={`w-full p-3 pl-10 rounded-lg bg-white/90 focus:outline-none border-2 transition-all duration-300 ${
-    //               !isValidAddress
-    //                 ? "border-red-500 shadow-red-200"
-    //                 : "border-cyan-400 focus:border-pink-300 hover:border-yellow-300 shadow-lg focus:shadow-pink-200"
-    //             }`}
-    //             placeholder="0x1234567890abcdef1234567890abcdef12345678"
-    //             value={address}
-    //             onChange={handleAddressChange}
-    //           />
-    //           <Link
-    //             className="text-cyan-400 absolute left-3 top-1/2 -translate-y-1/2 transition-colors group-hover:text-pink-300"
-    //             size={20}
-    //           />
-    //           {isLoading && (
-    //             <div className="absolute right-3 top-1/2 -translate-y-1/2">
-    //               <ClipLoader color="#f472b6" size={20} />
-    //             </div>
-    //           )}
-    //         </div>
-    //         {!isValidAddress && address && (
-    //           <p className="text-red-500 text-xs">Please enter a valid Ethereum address</p>
-    //         )}
-    //       </div>
-
-
-
-    //       {/* Token info card */}
-    //       {apiResponse && (
-    //         <div className="transform transition-all duration-300 hover:scale-102">
-    //           <div className="p-2 px-4 rounded-xl bg-gradient-to-r from-cyan-50 via-pink-50 to-yellow-50 shadow-lg border border-white/50">
-    //             {apiResponse.error ? (
-    //               <p className="text-red-500 font-medium text-center">{apiResponse.error}</p>
-    //             ) : (
-    //               <div className="flex items-center space-x-4">
-    //                 <div className="relative">
-    //                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-pink-300 to-yellow-300 rounded-full blur-sm animate-pulse" />
-    //                   <img
-    //                     src={apiResponse.logoURI}
-    //                     alt="Token Logo"
-    //                     className="relative w-10 h-10 rounded-full border-2 border-white shadow-lg"
-    //                   />
-    //                 </div>
-    //                 <div>
-    //                   <p className="text-gray-800 font-bold">{apiResponse.name}</p>
-    //                   <p className="text-gray-500 text-sm">{apiResponse.symbol}</p>
-    //                 </div>
-    //               </div>
-    //             )}
-    //           </div>
-    //         </div>
-    //       )}
-
-    //       {/* Generate button */}
-    //       <button
-    //         className={`w-full py-3 rounded-lg font-bold transition-all duration-300 transform ${
-    //           !address || !isValidAddress
-    //             ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-    //             : "bg-gradient-to-r from-cyan-400 via-pink-300 to-yellow-300 hover:opacity-90 active:scale-95 shadow-lg hover:shadow-xl text-white hover:text-gray-800"
-    //         }`}
-    //         onClick={generateLink}
-    //         disabled={!address || !isValidAddress}
-    //       >
-    //         Generate Link
-    //       </button>
-
-    //       {/* Generated link section */}
-    //       {generatedLink && (
-    //         <div className="space-y-4 transform transition-all duration-300">
-    //           <div className="bg-white/90 backdrop-blur-sm p-2 px-4 rounded-lg break-all text-sm flex items-center justify-between border-2 border-cyan-400 shadow-lg hover:shadow-xl">
-    //             <span className="truncate mr-2 text-gray-600 font-medium">
-    //               {generatedLink}
-    //             </span>
-    //             <button
-    //               onClick={copyToClipboard}
-    //               className="text-cyan-400 hover:text-pink-300 transition-colors p-2 rounded-lg hover:bg-gray-50"
-    //             >
-    //               <Copy size={20} />
-    //             </button>
-    //           </div>
-    //         </div>
-    //       )}
-
-    //       <p className="text-center text-xs text-gray-400">Powered by winks.fun</p>
-    //     </div>
-    //   </div>
-    // </div>
+  
     <div className="min-h-screen bg-gradient-to-b from-white to-blue-50 text-gray-800 outfit-font">
       {/* Navigation */}
       <nav
         className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? "bg-white/90 backdrop-blur-md shadow-sm py-3" : "bg-transparent py-5"
           }`}
       >
-        <div className="container mx-auto px-4 flex justify-between items-center">
+        <div className="container mx-auto px-4 lg:px-32 flex justify-between items-center">
           <div className="flex items-center">
             <motion.div
               initial={{ rotate: 0 }}
@@ -277,23 +172,24 @@ export default function Home() {
           </div>
 
           <div className="hidden md:flex space-x-8">
-            <Link href="#features" className="hover:text-violet-600 transition-colors font-medium">
+            <button onClick={() => handleScroll("features")} className="hover:text-violet-600 transition-colors font-medium">
               Features
-            </Link>
-            <Link href="#integrations" className="hover:text-violet-600 transition-colors font-medium">
+            </button>
+            <button onClick={() => handleScroll("integrations")} className="hover:text-violet-600 transition-colors font-medium">
               Integrations
-            </Link>
-            <Link href="#" className="hover:text-violet-600 transition-colors font-medium">
+            </button>
+            <button href="#" className="hover:text-violet-600 transition-colors font-medium">
               Docs
-            </Link>
-            <Link href="#" className="hover:text-violet-600 transition-colors font-medium">
+            </button>
+            <button href="#" className="hover:text-violet-600 transition-colors font-medium">
               About
-            </Link>
+            </button>
           </div>
 
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={() => handleScroll("swap")}
             className="bg-gradient-to-r from-violet-600 to-blue-500 px-5 py-2 rounded-full font-medium text-white shadow-lg shadow-violet-200"
           >
             Launch App
@@ -302,7 +198,7 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4">
+      <section className="pt-32 pb-20 px-4 lg:px-32">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0">
@@ -321,6 +217,7 @@ export default function Home() {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    onClick={() => handleScroll("swap")}
                     className="bg-gradient-to-r from-violet-600 to-blue-500 px-8 py-3 rounded-full font-medium text-lg text-white flex items-center justify-center shadow-lg shadow-violet-200"
                   >
                     Start Trading <FiArrowRight className="ml-2" />
@@ -391,7 +288,7 @@ export default function Home() {
 
       {/* Stats Section */}
       <section className="py-10">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 lg:px-32 ">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -429,7 +326,7 @@ export default function Home() {
 
       {/* Features Section */}
       <section id="features" className="py-20">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 lg:px-32">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -468,7 +365,7 @@ export default function Home() {
 
       {/* How It Works */}
       <section className="py-20 bg-gradient-to-r from-violet-50 to-blue-50">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 lg:px-32">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -536,7 +433,7 @@ export default function Home() {
 
       {/* Integrations Section */}
       <section id="integrations" className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 lg:px-32">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -585,8 +482,8 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-violet-100 to-blue-100">
-        <div className="container mx-auto px-4">
+      <section className="py-20 bg-gradient-to-r from-violet-100 to-blue-100" id="swap">
+        <div className="container mx-auto px-4 lg:px-32">
           <div className="max-w-4xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -707,7 +604,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="py-12 bg-white border-t border-gray-100">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 lg:px-32">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center mb-4">
