@@ -1,6 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Outfit:wght@100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+
+.outfit-font {
+    font-family: "Outfit", sans-serif;
+  }
+
+
 
 :root {
   --background: #ffffff;
