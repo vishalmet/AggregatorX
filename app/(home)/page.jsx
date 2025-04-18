@@ -133,12 +133,12 @@ export default function Home() {
   ]
 
   const dexLogos = [
-    { name: "Uniswap", logo: "/placeholder.svg?height=80&width=80" },
-    { name: "Balancer", logo: "/placeholder.svg?height=80&width=80" },
-    { name: "Curve", logo: "/placeholder.svg?height=80&width=80" },
-    { name: "SushiSwap", logo: "/placeholder.svg?height=80&width=80" },
-    { name: "1inch", logo: "/placeholder.svg?height=80&width=80" },
-    { name: "PancakeSwap", logo: "/placeholder.svg?height=80&width=80" },
+    { name: "Uniswap", logo: "/uniswap.png?height=80&width=80" },
+    { name: "Balancer", logo: "/balancer.png?height=80&width=80" },
+    { name: "Curve", logo: "/curve.png?height=80&width=80" },
+    { name: "SushiSwap", logo: "/sushiswap.png?height=80&width=80" },
+    { name: "1inch", logo: "/1inch.png?height=80&width=80" },
+    { name: "PancakeSwap", logo: "/pancakeswap.png?height=80&width=80" },
   ]
 
   const handleScroll = (id) => {

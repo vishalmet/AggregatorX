@@ -20,7 +20,7 @@ export async function generateMetadata() {
 
   
   return {
-    title: " Buy memecoins with 1-click from Twitter!",
+    title: "AggregatorX - Buy memecoins with 1-click from Twitter!",
     description: "Use any EVM wallet to buy your favorite memecoin from any EVM chain! Trade and refer others to earn Winks points.",
     // Twitter specific meta tags
     other: {
