@@ -21,7 +21,7 @@ export async function generateMetadata({ params }) {
   console.log("Is opened in X.com:", referrer.includes('x.com') || referrer.includes('twitter.com'));
 
   console.log("Current URL:", url);
-  const baseUrl = "https://bnbswap-winks.vercel.app";
+  const baseUrl = "https://aggregatorx.vercel.app";
   const {address} = await params;
 
   console.log("baseUrl", baseUrl);
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }) {
   const playerUrl = `${baseUrl}/wink/${address}`;
 
   return {
-    title: " Buy memecoins with 1-click from Twitter!",
+    title: "AggregatorX - Buy memecoins with 1-click from Twitter!",
     description: "Use any EVM wallet to buy your favorite memecoin from any EVM chain! Trade and refer others to earn Winks points.",
     metadataBase: new URL(baseUrl),
     other: {

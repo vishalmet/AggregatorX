@@ -26,9 +26,9 @@ export async function generateMetadata() {
     other: {
       'twitter:card': 'player',
       'twitter:site': '@winksdotfun',
-      'twitter:title': ' Buy memecoins with 1-click from Twitter!',
+      'twitter:title': 'AggregatorX - Buy memecoins with 1-click from Twitter!',
       'twitter:description': 'Use any EVM wallet to buy your favorite memecoin from any EVM chain! Trade and refer others to earn Winks points.',
-      'twitter:player': 'https://bnbswap-winks.vercel.app',
+      'twitter:player': 'https://aggregatorx.vercel.app',
       'twitter:player:width': '360',
       'twitter:player:height': '560',
       'twitter:image': 'https://res.cloudinary.com/dvddnptpi/image/upload/v1739442596/rq0wjymypjel3pg6xziu.png',
