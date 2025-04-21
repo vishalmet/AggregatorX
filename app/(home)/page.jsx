@@ -60,7 +60,7 @@ export default function Home() {
     const baseUrl =
       typeof window !== "undefined" && window.location.hostname === "localhost"
         ? "http://localhost:3000"
-        : "https://buymemes.winks.fun";
+        : "https://aggregatorx.vercel.app";
     const link = `${baseUrl}/wink/${address}`;
     setGeneratedLink(link);
   };
@@ -222,13 +222,13 @@ export default function Home() {
                   >
                     Start Trading <FiArrowRight className="ml-2" />
                   </motion.button>
-                  <motion.button
+                  {/* <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="bg-white border border-violet-300 px-8 py-3 rounded-full font-medium text-lg text-violet-700 shadow-md"
                   >
                     View Demo
-                  </motion.button>
+                  </motion.button> */}
                 </div>
               </motion.div>
             </div>
