@@ -19,7 +19,7 @@ import { useParams } from "next/navigation";
 import { ethers } from "ethers";
 
 const SolanaSwapUI: React.FC = () => {
-  const [isPageLoading, setIsPageLoading] = useState(true);
+  const [isPageLoading, setIsPageLoading] = useState(false);
 
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
 
@@ -349,7 +349,7 @@ const SolanaSwapUI: React.FC = () => {
   };
 
   const handleShare = () => {
-    const tweetText = `Just bought my favorite memecoin on winks.fun! Join me and earn points! 🚀\n\nhttps://buymemes.winks.fun/wink/${destAddress}`;
+    const tweetText = `Just bought my favorite memecoin on winks.fun! Join me and earn points! 🚀\n\nhttps://aggregatorx.vercel.app/wink/${destAddress}`;
     window.open(
       `https://twitter.com/intent/post?text=${encodeURIComponent(tweetText)}`,
       "_blank",
