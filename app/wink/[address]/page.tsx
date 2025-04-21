@@ -485,7 +485,7 @@ const SolanaSwapUI: React.FC = () => {
                       {/* Footer */}
                       <div className="mt-3 text-center">
                         <p className="text-sm text-gray-500">
-                          Powered by winks.fun
+                          Powered by AggregatorX
                         </p>
                       </div>
                     </div>
